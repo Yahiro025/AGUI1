@@ -1,0 +1,47 @@
+# Render Blueprint — one-click deploy.
+#
+# How to use it:
+#   1. Push this repo to GitHub.
+#   2. In Render: New → Blueprint → connect the repo.
+#   3. Render reads this file and provisions the web service.
+#   4. In the service's "Environment" tab, set OPENAI_API_KEY (or any of the
+#      other supported LLM provider keys) and ALLOWED_ORIGINS to your Vercel
+#      frontend URL. These are marked `sync: false` below so they come from
+#      Render's secret store, not from git.
+#
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: agui-tripbuddy-backend
+    runtime: docker
+    # Render builds from rootDir (backend/) and reads ./Dockerfile there.
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    autoDeploy: true
+    healthCheckPath: /healthz
+    # Webservice on free tier sleeps after 15 min idle; first request wakes it.
+    # Upgrade to a paid plan (Starter $7/mo) for always-on + faster cold start.
+    # Render auto-injects $PORT for web services, so we don't set it here.
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      # Secrets — set these in the Render dashboard, do NOT commit values.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: TRIPBUDDY_MODEL
+        sync: false
+      # Lock CORS to your frontend once you have the Vercel URL, e.g.
+      # https://agui-starter.vercel.app
+      - key: ALLOWED_ORIGINS
+        sync: false

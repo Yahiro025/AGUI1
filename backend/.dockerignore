@@ -1,0 +1,20 @@
+# Keep local dev artifacts and secrets out of the image.
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.agents
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.log
+data/
+README.md
+*.md

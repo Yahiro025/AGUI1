@@ -1,0 +1,25 @@
+[project]
+name = "agui-starter-backend"
+version = "0.1.0"
+description = "Minimal AG-UI endpoint for a TripBuddy Pydantic AI agent."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.32",
+    "python-dotenv>=1.0",
+    # Pydantic AI's `ag-ui` extra wires up the AG-UI protocol adapter.
+    # We pull in the most common LLM provider extras so the same install can
+    # speak OpenAI, Google Gemini, Groq, etc. Switch providers via env vars
+    # (see backend/.env.example).
+    "pydantic-ai[ag-ui,openai,google,groq]",
+]  
+
+[tool.uv]
+package = false
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
